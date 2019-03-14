@@ -1,16 +1,16 @@
 package com.greatersum.rental;
 
 public class MovieRental {
-    private final String movieId;
+    private final Movie movie;
     private final int days;
 
-    public MovieRental(String movieId, int days) {
-        this.movieId = movieId;
+    public MovieRental(Movie movie, int days) {
+        this.movie = movie;
         this.days = days;
     }
 
-    public String getMovieId() {
-        return movieId;
+    public Movie getMovie() {
+        return movie;
     }
 
     public int getDays() {

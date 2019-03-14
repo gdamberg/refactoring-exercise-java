@@ -1,0 +1,4 @@
+Rental Record for martin
+	Ran	9.5
+Amount owed is 9.5
+You earned 1 frequent renter points

@@ -1,0 +1,4 @@
+Rental Record for martin
+	Latest Hit Release	3
+Amount owed is 3
+You earned 1 frequent renter points

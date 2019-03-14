@@ -1,0 +1,4 @@
+Rental Record for martin
+	Cars 2	7.5
+Amount owed is 7.5
+You earned 1 frequent renter points

@@ -1,62 +1,45 @@
 package com.greatersum.rental;
 
 import java.math.BigDecimal;
-
-import static com.greatersum.rental.Movie.Code.NEW;
+import java.util.List;
 
 public class RentalInfo {
 
     public String statement(Customer customer) {
+        BigDecimal totalAmount = calculateTotalPrice(customer.getRentals());
+        int frequentRenterPoints = calculateFrequentRentalPoints(customer.getRentals());
 
-        BigDecimal totalAmount = BigDecimal.valueOf(0);
-        int frequentRenterPoints = 0;
-        String result = "Rental Record for " + customer.getName() + "\n";
-
-        for (MovieRental r : customer.getRentals()) {
-            Movie movie = r.getMovie();
-
-            BigDecimal thisAmount = calculateMoviePrice(r, movie);
-            frequentRenterPoints += calculateFrequentRentalPoints(r, movie);
-
-            //print figures for this rental
-            result += "\t" + movie.getTitle() + "\t" + thisAmount + "\n";
-            totalAmount = totalAmount.add(thisAmount);
-        }
-        // add footer lines
-        result += "Amount owed is " + totalAmount + "\n";
-        result += "You earned " + frequentRenterPoints + " frequent renter points\n";
-
-        return result;
+        return createStatement(customer, totalAmount, frequentRenterPoints);
     }
 
-    private int calculateFrequentRentalPoints(MovieRental r, Movie movie) {
-        int points = 1;
-        // add bonus for a two day new release rental
-        if (movie.getCode().equals(NEW) && r.getDays() > 2) points++;
+    private String createStatement(Customer customer, BigDecimal totalAmount, int frequentRenterPoints) {
+        StringBuilder statement = new StringBuilder("Rental Record for ").append(customer.getName()).append("\n");
+        for (MovieRental r : customer.getRentals()) {
+            Movie movie = r.getMovie();
+            BigDecimal thisAmount = movie.calculateMoviePrice(r.getDays());
+            statement.append("\t").append(movie.getTitle()).append("\t").append(thisAmount).append("\n");
+        }
+        statement.append("Amount owed is ").append(totalAmount).append("\n");
+        statement.append("You earned ").append(frequentRenterPoints).append(" frequent renter points\n");
+        return statement.toString();
+    }
+
+    private int calculateFrequentRentalPoints(List<MovieRental> rentals) {
+        int points = 0;
+        for (MovieRental r : rentals) {
+            Movie movie = r.getMovie();
+            points += movie.calculateFrequentRentalPoints(r.getDays());
+        }
         return points;
     }
 
-    private BigDecimal calculateMoviePrice(MovieRental r, Movie movie) {
-        BigDecimal price = BigDecimal.valueOf(0);
-
-        // determine amount for each movie
-        switch (movie.getCode()) {
-            case REGULAR:
-                price = BigDecimal.valueOf(2);
-                if (r.getDays() > 2) {
-                    price = BigDecimal.valueOf((r.getDays() - 2) * 1.5).add(price);
-                }
-                break;
-            case NEW:
-                price = BigDecimal.valueOf(r.getDays() * 3);
-                break;
-            case CHILDRENS:
-                price = BigDecimal.valueOf(1.5);
-                if (r.getDays() > 3) {
-                    price = BigDecimal.valueOf((r.getDays() - 3) * 1.5).add(price);
-                }
-                break;
+    private BigDecimal calculateTotalPrice(List<MovieRental> rentals) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (MovieRental r : rentals) {
+            Movie movie = r.getMovie();
+            total = total.add(movie.calculateMoviePrice(r.getDays()));
         }
-        return price;
+        return total;
     }
+
 }

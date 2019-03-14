@@ -1,14 +1,16 @@
 package com.greatersum.rental;
 
+import java.math.BigDecimal;
+
 public class Movie {
     private final String id;
     private final String title;
-    private final Code code;
+    private final MovieCategory movieCategory;
 
-    public Movie(String id, String title, Code code) {
+    public Movie(String id, String title, MovieCategory movieCategory) {
         this.id = id;
         this.title = title;
-        this.code = code;
+        this.movieCategory = movieCategory;
     }
 
     public String getId() {
@@ -19,13 +21,15 @@ public class Movie {
         return title;
     }
 
-    public Code getCode() {
-        return code;
+    public MovieCategory getMovieCategory() {
+        return movieCategory;
     }
 
-    public enum Code {
-        REGULAR,
-        CHILDRENS,
-        NEW
+    public int calculateFrequentRentalPoints(int days) {
+        return movieCategory.bonusPoints(days);
+    }
+
+    public BigDecimal calculateMoviePrice(int days) {
+        return movieCategory.rentalPrice(days);
     }
 }

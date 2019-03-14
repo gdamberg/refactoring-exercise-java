@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static com.greatersum.rental.Movie.Code.*;
+import static com.greatersum.rental.MovieCategory.*;
 
 public class RentalTests {
     private RentalInfo info = new RentalInfo();
